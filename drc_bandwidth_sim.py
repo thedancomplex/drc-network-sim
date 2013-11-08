@@ -56,11 +56,10 @@ c.getoutput('brctl addbr br0')
 c.getoutput('brctl addif br0 eth0')
 c.getoutput('brctl addif br0 eth1')
 
-c.getoutput('tc qdisc add dev eth0 root handle 1:0 netem delay 100ms')
-c.getoutput('tc qdisc add dev eth0 parent 1:1 handle 10: tbf rate 1000kbit buffer 1600 limit 3000')
+c.getoutput('tc qdisc add dev eth0 root tbf rate 100kbit latency 100ms burst 1540')
 c.getoutput('tc qdisc add dev eth1 root netem delay 100ms')
 
-c.getoutput('tc qdisc change dev eth0 parent 1:1 handle 10: tbf rate 1000kbit buffer 1600 limit 3000 latency 100ms')
+c.getoutput('tc qdisc change dev eth0 root tbf rate 100kbit latency 100ms burst 1540')
 c.getoutput('tc qdisc change dev eth1 root netem delay 0ms')
 
 
@@ -68,19 +67,19 @@ state = 0
 
 while True:
     if state == 0: 
-        c.getoutput('tc qdisc change dev eth0 parent 1:1 handle 10: tbf rate 1000kbit buffer 1600 limit 3000 latency 100ms')
+        c.getoutput('tc qdisc change dev eth0 root tbf rate 1000kbit latency 100ms burst 1540')
         stdscr.addstr(sLine, sIndent,"1Mbps - 100ms latency         ")
         state = 1 # change to 1
     elif state == 1:
-        c.getoutput('tc qdisc change dev eth0 parent 1:1 handle 10: tbf rate 100kbit buffer 1600 limit 3000 latency 100ms')
+        c.getoutput('tc qdisc change dev eth0 root tbf rate 100kbit latency 100ms burst 1540')
         stdscr.addstr(sLine, sIndent,"100kbps - 100ms latency         ")
         state = 2 # change to 1
     elif state == 2:
-        c.getoutput('tc qdisc change dev eth0 parent 1:1 handle 10: tbf rate 1000kbit buffer 1600 limit 3000 latency 1000ms')
+        c.getoutput('tc qdisc change dev eth0 root tbf rate 1000kbit latency 1000ms burst 1540')
         stdscr.addstr(sLine, sIndent,"1Mbps - 1000ms latency         ")
         state = 3 # change to 1
     elif state == 3:
-        c.getoutput('tc qdisc change dev eth0 parent 1:1 handle 10: tbf rate 100kbit buffer 1600 limit 3000 latency 1000ms')
+        c.getoutput('tc qdisc change dev eth0 root tbf rate 100kbit latency 1000ms burst 1540')
         stdscr.addstr(sLine, sIndent,"100kbps - 1000ms latency         ")
         state = 0 # change to 1
     stdscr.refresh()
