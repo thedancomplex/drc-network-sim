@@ -50,7 +50,7 @@ stdscr.addstr(4, 2, "Input: eth0  -  Output: eth1")
 
 stdscr.addstr(sLine,2,"Status:")
 
-stdscr.addstr(sLine, sIndent,"Starting")
+stdscr.addstr(sLine, sIndent,"Starting          ")
 stdscr.refresh()
 c.getoutput('brctl addbr br0')
 c.getoutput('brctl addif br0 eth0')
@@ -66,12 +66,13 @@ lat = 100
 while True:
     if lat == 100: 
         c.getoutput('tc qdisc change dev eth0 root netem delay 100ms')
-        stdscr.addstr(sLine, sIndent,"100ms latency")
+        stdscr.addstr(sLine, sIndent,"100ms latency         ")
         lat = 1000 # change to 1000
     elif lat == 1000:
         c.getoutput('tc qdisc change dev eth0 root netem delay 1000ms')
-        stdscr.addstr(sLine, sIndent,"1000ms latency")
+        stdscr.addstr(sLine, sIndent,"1000ms latency        ")
         lat = 100
+    stdscr.refresh()
     time.sleep(sleepTime)
 
 
